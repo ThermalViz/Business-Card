@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
   runApp(const MyApp());
 }
 
@@ -64,6 +69,10 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
 
   Alignment _dragAlignment = Alignment.center;
 
+  double radiusOfProfile = 60;
+  double opacityOfLabel = 1;
+  bool isExpanded = false;
+  bool isDoneTransition = false;
 
 
   /// Calculates and runs a [SpringSimulation].
@@ -157,148 +166,229 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
           children:
           <Widget>[
 
-            Container(
-                height: 500,
-                width: 300,
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    image: DecorationImage(
-                        image: AssetImage('images/giphy (1).gif',),
-                        fit: BoxFit.fill,
-                        opacity: 150,
-                      
-                    )
-                ),
+            AnimatedContainer(
+              duration: const Duration(seconds: 1),
+              // Provide an optional curve to make the animation feel smoother.
+              curve: Curves.fastOutSlowIn,
+              height: 500,
+              width: 300,
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  image: DecorationImage(
+                      image: AssetImage('images/giphy (1).gif',),
+                      fit: BoxFit.fill,
+                      opacity: 150,
 
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                            backgroundImage: AssetImage('images/profile.jpg'),
-                            radius: 50
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'JOSHUA L. CHAN',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'GrandifloraOne',
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.none
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+                  )
+              ),
 
-                      ],
-                    ),
-                    SizedBox(height: 7),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'LEAD GAME SOFTWARE DEVELOPER',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'GrandifloraOne',
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.none
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
 
-                      ],
-                    ),
-                    SizedBox(height: 20),
-
-                    Card(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8))
-                      ),
-                      color: Colors.black45,
-
-                      child: Column(
-
+                  GestureDetector(
+                      onLongPress: () {
+                        setState(() {
+                          isExpanded = !isExpanded;
+                          Future.delayed(const Duration(seconds: 5), (){});
+                          isDoneTransition = !isDoneTransition;
+                        });
+                      },
+                      child: Stack (
                         children: [
-                          SizedBox(height: 10, width: 40),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+
+                          const Column(
+
                             children: [
-                              Icon(
-                                Icons.call,
-                                size: 24.0,
-                                color: Colors.white,
+                              SizedBox(height: 140),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'JOSHUA L. CHAN',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'GrandifloraOne',
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold,
+                                        decoration: TextDecoration.none
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+
+                                ],
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 20, top: 1, bottom: 1),
-                                child: Text(
-                                  '09123456789',
+                              SizedBox(height: 7),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'LEAD SOFTWARE DEVELOPER',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'GrandifloraOne',
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        decoration: TextDecoration.none
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+
+                                ],
+                              ),
+                              SizedBox(height: 20),
+
+                              Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(8))
+                                ),
+                                color: Colors.black45,
+
+                                child: Column(
+
+                                  children: [
+                                    SizedBox(height: 10, width: 40),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.call,
+                                          size: 24.0,
+                                          color: Colors.white,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 20, top: 1, bottom: 1),
+                                          child: Text(
+                                            '0915 683 1312',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontFamily: 'GrandifloraOne',
+                                                fontSize: 16
+                                            ),
+                                            textAlign: TextAlign.right,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                    SizedBox(height: 10, width: 40),
+                                  ],
+
+                                ),
+
+
+                              ),
+                              Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(8))
+                                ),
+                                color: Colors.black45,
+
+                                child: Column(
+
+                                  children: [
+                                    SizedBox(height: 10, width: 40),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.location_on_sharp,
+                                          size: 24.0,
+                                          color: Colors.white,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 20, top: 1, bottom: 1),
+                                          child: Text(
+                                            'DASMARINAS, CAVITE ',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'GrandifloraOne',
+                                              fontSize: 16,
+                                            ),
+                                            textAlign: TextAlign.right,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                    SizedBox(height: 10, width: 40),
+                                  ],
+                                ),
+                              ),
+
+                              SizedBox(height: 50, width: 40),
+                            ],
+
+                          ),
+                          Center(
+                            child: AnimatedContainer(
+                                width: isExpanded ? 70 : 110,
+                                margin: EdgeInsets.only(left: isExpanded ? 180 : 0),
+                                duration: const Duration(milliseconds: 400),
+                                curve: Curves.fastOutSlowIn,
+                                child: CircleAvatar(
+                                  radius: radiusOfProfile,
+                                  backgroundImage: const AssetImage('images/profile.jpg'),
+                                )
+                            ),
+                          ),
+                          AnimatedOpacity(
+                              duration: const Duration(milliseconds: 150),
+                              opacity: isExpanded ? 1 : 0,
+                              child: Container(
+                                margin: const EdgeInsets.only(top: 33, left: 25),
+                                child: const Text(
+                                  'ABOUT ME',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontFamily: 'GrandifloraOne',
-                                      fontSize: 16
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.none
                                   ),
-                                  textAlign: TextAlign.right,
+                                  textAlign: TextAlign.center,
                                 ),
-                              ),
-                            ],
+                              )
                           ),
-
-                          SizedBox(height: 10, width: 40),
-                        ],
-
-                      ),
-
-
-                    ),
-                    Card(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8))
-                      ),
-                      color: Colors.black45,
-
-                      child: Column(
-
-                        children: [
-                          SizedBox(height: 10, width: 40),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.location_on_sharp,
-                                size: 24.0,
-                                color: Colors.white,
+                          Center(
+                            child: AnimatedContainer(
+                              duration: const Duration(seconds: 1),
+                              curve: Curves.fastOutSlowIn,
+                              height: isDoneTransition ? 330 : 0,
+                              width: 270,
+                              margin: const EdgeInsets.only(top: 130),
+                              decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.all(Radius.circular(20))
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 20, top: 1, bottom: 1),
-                                child: Text(
-                                  '09123456789',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'GrandifloraOne',
-                                    fontSize: 16,
+                              child: Center(
+                                child: Container(
+                                  padding: const EdgeInsets.all(25),
+                                  child: const Text(
+                                    '''My name is Joshua L. Chan. I am currently studying in De La Salle University of Dasmarinas and I am in my 3rd year of college
+                                           I freelance as a game developer, part time as a firmware developer and UI integration.''',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: 'GrandifloraOne',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      decoration:  TextDecoration.none,
+
+                                    ),
+                                    textAlign: TextAlign.justify,
                                   ),
-                                  textAlign: TextAlign.right,
-                                ),
-                              ),
-                            ],
+                                )
+                              )
+                            ),
                           ),
-
-                          SizedBox(height: 10, width: 40),
                         ],
-                      ),
-                    )
-                  ],
-                )
+                      )
+                  ),
+
+
+
+                ],
+              )
             ),
           ],
         ),
